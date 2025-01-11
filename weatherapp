@@ -1,0 +1,40 @@
+import requests
+
+# Function to fetch data from a public API
+def fetch_weather(city, api_key):
+    base_url = "https://api.openweathermap.org/data/2.5/weather"
+    params = {
+        "q": city,
+        "appid": api_key,
+        "units": "metric"  # Use metric units (Celsius)
+    }
+    try:
+        # Make the API request
+        response = requests.get(base_url, params=params)
+        response.raise_for_status()  # Raise an exception for HTTP errors
+        data = response.json()
+        return data
+    except requests.exceptions.RequestException as e:
+        print(f"An error occurred: {e}")
+        return None
+
+# Function to display the weather data
+def display_weather(data):
+    if data:
+        city = data["Name"]
+        temperature = data["main"]["temp"]
+        weather_description = data["weather"][0]["description"]
+        print(f"City: {city}")
+        print(f"Temperature: {temperature}°C")
+        print(f"Weather: {weather_description}")
+    else:
+        print("No data to display.")
+
+# Main program
+if __name__ == "__main__":
+    # Replace 'your_api_key' with your actual OpenWeatherMap API key
+    API_KEY = "your_api_key"
+    CITY = "London"
+    
+    weather_data = fetch_weather(CITY, API_KEY)
+    display_weather(weather_data)
